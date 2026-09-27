@@ -60,7 +60,14 @@ jobs:
         run: dotnet publish src/AsterDock.Host/AsterDock.Host.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:BundleApplications=false -o artifacts/publish/${{ matrix.rid }}
 
       - name: Package Linux release
-        run: bash scripts/package-linux.sh ${{ matrix.rid }} artifacts/release/${{ matrix.rid }}
+        run: |
+          RID="${{ matrix.rid }}"
+          PUBLISH_DIR="artifacts/publish/$RID"
+          OUTPUT_DIR="artifacts/release/$RID"
+          mkdir -p "$OUTPUT_DIR"
+          cd "$PUBLISH_DIR"
+          tar czf "$OUTPUT_DIR/AsterDock-$RID.tar.gz" .
+          echo "Created: $OUTPUT_DIR/AsterDock-$RID.tar.gz"
 
       - name: Upload Linux packages
         uses: actions/upload-artifact@v6

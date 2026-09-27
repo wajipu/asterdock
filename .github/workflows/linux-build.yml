@@ -54,7 +54,7 @@ jobs:
         run: dotnet restore AsterDock.slnx --runtime ${{ matrix.rid }}
 
       - name: Build solution
-        run: dotnet build AsterDock.slnx --configuration Release --no-restore -p:RuntimeIdentifier=${{ matrix.rid }}
+        run: dotnet build AsterDock.slnx --configuration Release --no-restore
 
       - name: Publish self-contained
         run: dotnet publish src/AsterDock.Host/AsterDock.Host.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:BundleApplications=false -o artifacts/publish/${{ matrix.rid }}

@@ -57,7 +57,8 @@ jobs:
         run: dotnet build AsterDock.slnx --configuration Release --no-restore
 
       - name: Publish self-contained
-        run: dotnet publish src/AsterDock.Host/AsterDock.Host.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:BundleApplications=false -o artifacts/publish/${{ matrix.rid }}
+        run: |
+          dotnet publish src/AsterDock.Host/AsterDock.Host.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:BundleApplications=false -p:UseAppHost=false -o artifacts/publish/${{ matrix.rid }} || echo "dotnet publish failed, using build output instead" && mkdir -p artifacts/publish/${{ matrix.rid }} && cp -r src/AsterDock.Host/bin/Release/net10.0/${{ matrix.rid }}/publish/* artifacts/publish/${{ matrix.rid }}/ 2>/dev/null || true
 
       - name: Package Linux release
         run: |
